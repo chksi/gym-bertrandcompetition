@@ -152,6 +152,77 @@ class BertrandCompetitionContinuousEnv(MultiAgentEnv):
         ''' MultiAgentEnv Step '''
 
         actions_list = np.array(list(actions_dict.values())).flatten()
+        # print(actions_list)
+
+        # 20s
+        # 21 both want to charge higher price to "win", but may be better off both pricing low
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = self.low_price
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 22
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = self.high_price
+        # temp_actions_list[1 - np.argmax(actions_list)] = np.max(actions_list)
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 23
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = np.clip(np.min(actions_list) - 0.1, self.low_price, self.high_price)
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 24
+        # self.prices = actions_list[:self.num_agents]
+        # demand = [self.demand(self.a, self.prices, self.mu, 0), self.demand(self.a, self.prices, self.mu, 1)]
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = self.low_price
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 25
+        # self.prices = actions_list[:self.num_agents]
+        # demand = [self.demand(self.a, self.prices, self.mu, 0), self.demand(self.a, self.prices, self.mu, 1)]
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = np.clip(np.min(actions_list) - 0.1, self.low_price, self.high_price)
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 26
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = self.low_price + 0.05
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 27
+        # self.prices = actions_list[:self.num_agents]
+        # demand = [self.demand(self.a, self.prices, self.mu, 0), self.demand(self.a, self.prices, self.mu, 1)]
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = self.high_price
+        # temp_actions_list[1 - np.argmax(actions_list)] = np.max(actions_list)
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 28 
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = ((np.min(actions_list) - self.low_price) // 2) + self.low_price
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
+
+        # 29
+        # temp_actions_list = [0, 0]
+        # temp_actions_list[np.argmax(actions_list)] = np.min(actions_list)
+        # temp_actions_list[1 - np.argmax(actions_list)] = ((np.min(actions_list) - self.low_price) // 3) + self.low_price
+        # actions_list = np.array(temp_actions_list)
+        # # print(actions_list)
 
         if self.use_pickle:
             with open(self.path + './arrays/' + self.savefile + '.pkl', 'ab') as f:
@@ -187,6 +258,7 @@ class BertrandCompetitionContinuousEnv(MultiAgentEnv):
         else:
             for i in range(self.num_agents):
                 reward[i] = (self.prices[i] - self.c_i) * self.demand(self.a, self.prices, self.mu, i)
+                # reward[i] = (self.prices[i] - self.c_i) * demand[i]
 
         reward = dict(zip(self.agents, reward))
         done = {'__all__': self.current_step == self.max_steps}
@@ -276,6 +348,7 @@ class BertrandCompetitionContinuousEnv(MultiAgentEnv):
         plt.plot(x, np.repeat(self.pN, n), 'b--', label='Nash')
         plt.xlabel('Steps')
         plt.ylabel('Price')
+        plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
         plt.title(self.savefile.replace('_', ' ').title())
         plt.legend(loc='upper left')
         plt.savefig('./figures/' + self.savefile + '_' + str(overwrite_id))
@@ -293,6 +366,7 @@ class BertrandCompetitionContinuousEnv(MultiAgentEnv):
         plt.plot(x, np.repeat(self.pN, last_n), 'b--', label='Nash')
         plt.xlabel('Steps')
         plt.ylabel('Price')
+        plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
         plt.title((self.savefile + title_str + ' Eval ' + str(last_n)).replace('_', ' ').title())
         plt.legend(loc='upper left')
         plt.savefig('./figures/' + self.savefile + title_str + '_eval_' + str(last_n) + '_' + str(overwrite_id))

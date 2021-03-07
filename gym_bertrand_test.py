@@ -58,7 +58,7 @@ from ray.tune.logger import pretty_print
 # CHANGE PARAMETERS FOR TESTING
 
 # Trainer Choice (Options: QL, SARSA, DQN, PPO, A3C, A2C, DDPG)
-trainer_choice = 'DDPG'
+trainer_choice = 'QL'
 second_trainer_choice = '' # leave as empty string ('') for none
 
 # Collusion Mitigation Mechanism
@@ -79,7 +79,7 @@ delta = 0.95
 log_frequency = 50000
 
 # Performance and Testing
-overwrite_id = 1
+overwrite_id = 0
 num_gpus = 0
 len_eval_after_training = 1000
 len_eval_after_deviation = 20
@@ -94,7 +94,7 @@ if second_trainer_choice:
     savefile += '_' + second_trainer_choice
 savefile += '_' + str(num_agents) + '_agents_k_' + str(k)
 if supervisor:
-    savefile += '_supervisor_' + str(supervisor) + '_' + str(proportion_boost)
+    savefile += '_supervisor_' + str(supervisor) + '_' + str(proportion_boost).replace('.', '_')
 
 config = {
     'env_config': {
@@ -363,7 +363,7 @@ else:
         sessions=sessions, 
         convergence=convergence, 
         trainer_choice=trainer_choice, 
-        supervisor=supervisor, 
+        supervisor=False, 
         proportion_boost=proportion_boost, 
         use_pickle=use_pickle, 
         path=path,
@@ -378,7 +378,9 @@ else:
             alpha=alpha, 
             beta=beta, 
             delta=delta, 
-            supervisor=supervisor, 
+            supervisor=supervisor,
+            proportion_boost=proportion_boost,
+            action_price_space=env.action_price_space,
             sessions=sessions, 
             log_frequency=log_frequency
         )
